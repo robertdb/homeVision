@@ -1,4 +1,9 @@
-@import "tailwindcss";
+/* Base scan = this file’s folder (`src/`) so every utility used in TS/TSX is generated in dev + build. */
+@import "tailwindcss" source(".");
+
+/* Guarantees these layout utilities exist even if scanning glitches in the editor/dev server. */
+@source inline("bg-background min-h-svh px-6");
+
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/figtree";

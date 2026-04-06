@@ -1,0 +1,1 @@
+export { HouseFeed } from './HouseFeed'

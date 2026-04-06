@@ -1,8 +1,10 @@
+import { HouseFeed } from '@/components/HouseFeed'
+
 function App() {
   return (
-    <>
-      HomeVision WIP
-    </>
+    <main className="bg-background min-h-svh px-8">
+      <HouseFeed />
+    </main>
   )
 }
 
