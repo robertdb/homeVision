@@ -1,10 +1,22 @@
-import { render, screen } from '@testing-library/react'
-import App from './App'
+import { render, screen, waitFor } from '@testing-library/react';
+
+import App from './App';
+import { createHousesFetchMock } from '@/test-utils/housesApiMock';
 
 describe('App', () => {
-  it('renders feed inside main', () => {
-    render(<App />)
-    expect(screen.getByRole('main')).toBeInTheDocument()
-    expect(screen.getByText(/Wojciech Sanders/)).toBeInTheDocument()
-  })
-})
+  beforeEach(() => {
+    globalThis.fetch = createHousesFetchMock();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('renders feed inside main', async () => {
+    render(<App />);
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/Wojciech Sanders/)).toBeInTheDocument();
+    });
+  });
+});

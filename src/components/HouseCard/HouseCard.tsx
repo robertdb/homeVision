@@ -1,14 +1,14 @@
-import type { House } from '@/types/house'
-import { Badge } from '@/components/ui/badge'
+import type { House } from '@/features/house';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 
 interface HouseCardProps {
-  house: House
+  house: House;
 }
 
 export const HouseCard = ({ house }: HouseCardProps) => {
@@ -35,5 +35,5 @@ export const HouseCard = ({ house }: HouseCardProps) => {
         <CardDescription>{house.homeowner}</CardDescription>
       </CardHeader>
     </Card>
-  )
-}
+  );
+};
