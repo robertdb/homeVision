@@ -2,8 +2,9 @@ import { render, screen } from '@testing-library/react'
 import App from './App'
 
 describe('App', () => {
-  it('renders placeholder copy', () => {
+  it('renders feed inside main', () => {
     render(<App />)
-    expect(screen.getByText(/HomeVision WIP/i)).toBeInTheDocument()
+    expect(screen.getByRole('main')).toBeInTheDocument()
+    expect(screen.getByText(/Wojciech Sanders/)).toBeInTheDocument()
   })
 })
