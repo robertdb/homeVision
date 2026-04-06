@@ -8,6 +8,9 @@ module.exports = {
     '**/?(*.)+(spec|test).[jt]s?(x)',
   ],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
