@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import type { House } from '@/types/house'
+import type { House } from '@/features/house'
 import { HouseCard } from './HouseCard'
 
 const sampleHouse: House = {
