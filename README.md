@@ -1,6 +1,6 @@
 # HomeVision
 
-Front-end for browsing houses: React, Vite, TypeScript, and TanStack Query. It includes a human-in-the-loop flow to approve or reject listings and export audit decisions.
+Front-end for browsing houses: React, Vite, TypeScript, and TanStack Query. It includes a human-in-the-loop flow to approve or reject houses and export audit decisions.
 
 ## Live app (staging)
 
@@ -55,6 +55,7 @@ This project was built incrementally via pull requests. **Each PR includes a des
 6. [Vercel Deploy and Production Branch Docs](https://github.com/robertdb/homeVision/pull/6)
 7. [Human in the Loop Audit for Properties](https://github.com/robertdb/homeVision/pull/7)
 8. [Component File Renaming and Test Updates](https://github.com/robertdb/homeVision/pull/8)
+9. [UI Polish Favicon and README Rhythm](https://github.com/robertdb/homeVision/pull/9)
 
 [All closed pull requests on GitHub](https://github.com/robertdb/homeVision/pulls?q=is%3Apr+is%3Aclosed)
 
@@ -82,3 +83,8 @@ This app is a **static Vite build**. Deploy it on [Vercel](https://vercel.com) b
 ## API configuration
 
 House requests are built from `VITE_API_BASE_STAGING` in [`src/features/api.ts`](src/features/api.ts) and the house API helpers under [`src/features/house/`](src/features/house/).
+
+## House grid and performance
+
+I considered a virtualized list for the house grid at one point. Performance checks stayed consistently strong (for example Lighthouse on the staging URL: mobile performance **99**, FCP and LCP about **0.4s**, TBT **40ms**, CLS **0** in Chrome DevTools), so I did not prioritize building virtualization.
+
