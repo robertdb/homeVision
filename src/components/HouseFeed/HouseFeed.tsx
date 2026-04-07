@@ -3,6 +3,7 @@ import { AlertCircle } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useHousesInfiniteQuery } from '@/features/house';
@@ -35,10 +36,13 @@ export const HouseFeed = () => {
     houses,
     isPending,
     isError,
-    error,
     isLoadingMore,
     hasMore,
     fetchNextPage,
+    refetch,
+    retryLoadMore,
+    isFetching,
+    loadMoreFailed,
   } = useHousesInfiniteQuery();
 
   const { ref: sentinelRef, inView } = useInView({
@@ -58,14 +62,22 @@ export const HouseFeed = () => {
 
   if (isError) {
     return (
-      <div className="flex w-full max-w-lg flex-col gap-4 py-8">
-        <Alert variant="destructive">
-          <AlertCircle className="size-4" />
-          <AlertTitle>Could not load houses</AlertTitle>
-          <AlertDescription>
-            {error instanceof Error ? error.message : 'Something went wrong.'}
-          </AlertDescription>
-        </Alert>
+      <div className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 py-16">
+        <Alert className="max-w-md">
+            <AlertCircle className="size-4" />
+            <AlertTitle>We're having trouble showing Houses.</AlertTitle>
+            <AlertDescription>
+              There was a temporary issue. Try refreshing to see more properties.
+            </AlertDescription>
+          </Alert>
+        <Button
+          type="button"
+          onClick={() => void refetch()}
+          disabled={isFetching}
+          className="w-full sm:w-auto"
+        >
+          {isFetching ? 'Trying again…' : 'Try again'}
+        </Button>
       </div>
     );
   }
@@ -77,6 +89,7 @@ export const HouseFeed = () => {
           Houses
         </h1>
       </header>
+
       <div
         className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         role="list"
@@ -87,6 +100,7 @@ export const HouseFeed = () => {
           </div>
         ))}
       </div>
+
       <div ref={sentinelRef} className="h-px w-full" aria-hidden />
 
       {isLoadingMore ? (
@@ -94,7 +108,26 @@ export const HouseFeed = () => {
           Loading more…
         </p>
       ) : null}
-      
+
+        {loadMoreFailed ? (
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <Alert className="max-w-md">
+              <AlertCircle className="size-4" />
+              <AlertTitle>We're having trouble showing more houses.</AlertTitle>
+              <AlertDescription>
+                There was a temporary issue. Try refreshing to see more properties.
+              </AlertDescription>
+            </Alert>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => void retryLoadMore()}
+              disabled={isLoadingMore}
+            >
+              {isLoadingMore ? 'Loading…' : 'Try again'}
+            </Button>
+          </div>
+      ) : null}
     </div>
   )
 } 
