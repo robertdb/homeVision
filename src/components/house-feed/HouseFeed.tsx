@@ -8,7 +8,8 @@ import { Card, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useHousesInfiniteQuery } from '@/features/house';
 
-import { HouseCard } from '../HouseCard';
+import { HouseCard } from '../house-card';
+import { useAuditHistory } from '@/components/audit-history';
 
 function HouseFeedSkeleton() {
   return (
@@ -44,6 +45,8 @@ export const HouseFeed = () => {
     isFetching,
     loadMoreFailed,
   } = useHousesInfiniteQuery();
+
+  const { getAuditState, decide } = useAuditHistory();
 
   const { ref: sentinelRef, inView } = useInView({
     rootMargin: '320px 0px',
@@ -83,20 +86,19 @@ export const HouseFeed = () => {
   }
 
   return(
-    <div className="mx-auto w-full max-w-6xl px-4 py-8">
-       <header className="mb-8">
-        <h1 className="text-foreground text-3xl font-semibold tracking-tight">
-          Houses
-        </h1>
-      </header>
-
+    <>
       <div
         className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         role="list"
         >
         {houses.map((house) => (
           <div key={house.id} role="listitem">
-            <HouseCard house={house} />
+            <HouseCard 
+              house={house}
+              auditState={getAuditState(house.id)}
+              onApprove={() => decide(house, 'approved')}
+              onReject={() => decide(house, 'rejected')}
+            />
           </div>
         ))}
       </div>
@@ -128,7 +130,7 @@ export const HouseFeed = () => {
             </Button>
           </div>
       ) : null}
-    </div>
+    </>
   )
 } 
 

@@ -10,9 +10,17 @@ const sampleHouse: House = {
   photoURL: 'https://example.com/house.jpg',
 }
 
+const defaultAuditProps = {
+  auditState: 'pending' as const,
+  onApprove: jest.fn(),
+  onReject: jest.fn(),
+};
+
 describe('HouseCard', () => {
   it('renders address, homeowner, formatted price and photo URL', () => {
-    const { container } = render(<HouseCard house={sampleHouse} />)
+    const { container } = render(
+      <HouseCard house={sampleHouse} {...defaultAuditProps} />,
+    );
 
     expect(
       screen.getByText('4 Pumpkin Hill Street Antioch, TN 37013'),
@@ -31,7 +39,9 @@ describe('HouseCard', () => {
   });
 
   it('shows photo unavailable placeholder when the image fails to load', () => {
-    const { container } = render(<HouseCard house={sampleHouse} />);
+    const { container } = render(
+      <HouseCard house={sampleHouse} {...defaultAuditProps} />,
+    );
 
     const img = container.querySelector('img');
     expect(img).toBeInTheDocument();
