@@ -13,7 +13,7 @@ export const Header = () => {
       <div className="flex flex-col gap-3 px-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 w-full sm:flex-1">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-            HomeVision Audit Pipeline
+            HomeVision Validation Session
           </h1>
           <p className="mt-1 hidden text-sm text-muted-foreground sm:block">
             {HEADER_DESCRIPTION}

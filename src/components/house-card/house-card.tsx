@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { AuditStatusBadge } from './AuditStatusBadge';
+import { AuditStatusBadge } from './audit-status-badge';
 
 const priceFmt = new Intl.NumberFormat('en-US', {
   style: 'currency',

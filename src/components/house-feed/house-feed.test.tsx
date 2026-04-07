@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 
-import { HouseFeed } from './HouseFeed';
+import { HouseFeed } from './house-feed';
 import {
   createFailFirstPageThenSuccessFetchMock,
   createFailPage2ThenSuccessFetchMock,
