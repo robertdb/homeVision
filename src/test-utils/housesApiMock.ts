@@ -73,6 +73,79 @@ export const SAMPLE_HOUSES_PAGE: House[] = [
   },
 ];
 
+export const SAMPLE_HOUSES_PAGE_2: House[] = [
+  {
+    id: 20,
+    address: '100 Page Two St.',
+    homeowner: 'Alex Page',
+    price: 100000,
+    photoURL: 'https://example.com/p2-0.jpg',
+  },
+  {
+    id: 21,
+    address: '101 Page Two St.',
+    homeowner: 'Blake Page',
+    price: 101000,
+    photoURL: 'https://example.com/p2-1.jpg',
+  },
+  {
+    id: 22,
+    address: '102 Page Two St.',
+    homeowner: 'Casey Page',
+    price: 102000,
+    photoURL: 'https://example.com/p2-2.jpg',
+  },
+  {
+    id: 23,
+    address: '103 Page Two St.',
+    homeowner: 'Drew Page',
+    price: 103000,
+    photoURL: 'https://example.com/p2-3.jpg',
+  },
+  {
+    id: 24,
+    address: '104 Page Two St.',
+    homeowner: 'Eden Page',
+    price: 104000,
+    photoURL: 'https://example.com/p2-4.jpg',
+  },
+  {
+    id: 25,
+    address: '105 Page Two St.',
+    homeowner: 'Finn Page',
+    price: 105000,
+    photoURL: 'https://example.com/p2-5.jpg',
+  },
+  {
+    id: 26,
+    address: '106 Page Two St.',
+    homeowner: 'Gray Page',
+    price: 106000,
+    photoURL: 'https://example.com/p2-6.jpg',
+  },
+  {
+    id: 27,
+    address: '107 Page Two St.',
+    homeowner: 'Harper Page',
+    price: 107000,
+    photoURL: 'https://example.com/p2-7.jpg',
+  },
+  {
+    id: 28,
+    address: '108 Page Two St.',
+    homeowner: 'Indigo Page',
+    price: 108000,
+    photoURL: 'https://example.com/p2-8.jpg',
+  },
+  {
+    id: 29,
+    address: '109 Page Two St.',
+    homeowner: 'Jules Page',
+    price: 109000,
+    photoURL: 'https://example.com/p2-9.jpg',
+  },
+];
+
 function pageFromHousesFetchInput(input: RequestInfo | URL): string | null {
   const url =
     typeof input === 'string'
@@ -93,6 +166,53 @@ function successResponseForPage(page: string | null) {
     status: 200,
     json: () => Promise.resolve(body),
   });
+}
+
+function successResponseForTwoPages(page: string | null) {
+  if (page === '1') {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ houses: SAMPLE_HOUSES_PAGE, ok: true }),
+    });
+  }
+  if (page === '2') {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ houses: SAMPLE_HOUSES_PAGE_2, ok: true }),
+    });
+  }
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({ houses: [], ok: true }),
+  });
+}
+
+export function createTwoPageHousesFetchMock() {
+  return jest.fn((input: RequestInfo | URL) => {
+    const page = pageFromHousesFetchInput(input);
+    return successResponseForTwoPages(page);
+  }) as unknown as typeof fetch;
+}
+
+export function createFailPage2ThenSuccessFetchMock() {
+  let page2Attempts = 0;
+  return jest.fn((input: RequestInfo | URL) => {
+    const page = pageFromHousesFetchInput(input);
+    if (page === '2') {
+      page2Attempts += 1;
+      if (page2Attempts === 1) {
+        return Promise.resolve({
+          ok: false,
+          status: 500,
+          json: async () => ({}),
+        });
+      }
+    }
+    return successResponseForTwoPages(page);
+  }) as unknown as typeof fetch;
 }
 
 export function createHousesFetchMock() {

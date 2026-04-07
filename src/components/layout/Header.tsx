@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { AuditDialog } from '@/components/audit-history';
 
 const HEADER_DESCRIPTION =
-  'Manually verify each property: check the image against price, owner, and address, then approve or reject. Your calls are tracked per listing ID for export and downstream review.';
+  'Ensure all property details make sense together. Cross-reference the image with the price, owner, and address to approve or reject the entry. Your actions will be logged per ID for export.';
 
 export const Header = () => {
   const [auditDialogOpen, setAuditDialogOpen] = useState(false);

@@ -63,7 +63,7 @@ export const HouseFeed = () => {
     return <HouseFeedSkeleton />;
   }
 
-  if (isError) {
+  if (isError && houses.length === 0) {
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 py-16">
         <Alert className="max-w-md">
