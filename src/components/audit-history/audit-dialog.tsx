@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { ConfirmAlert } from '@/components/ui/confirm-alert';
 import { downloadAuditCsv } from './utils';
-import { AuditHistoryTable } from './AuditList';
+import { AuditHistoryTable } from './audit-list';
 import { useAuditHistory } from './useAuditHistory';
 
 type AuditDialogProps = {
@@ -41,7 +41,7 @@ export function AuditDialog({ open, onOpenChange }: AuditDialogProps) {
           <DialogHeader>
             <DialogTitle>Audit history</DialogTitle>
             <DialogDescription>
-              Audit data stays only in this browser for this session—export CSV
+              Audit data stays only in this browser for this session export CSV
               before you close or refresh. Undo removes a row and sets that listing
               back to pending.
             </DialogDescription>

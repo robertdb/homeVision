@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { House } from '@/features/house'
-import { HouseCard } from './HouseCard'
+import { HouseCard } from './house-card';
 
 const sampleHouse: House = {
   id: 0,

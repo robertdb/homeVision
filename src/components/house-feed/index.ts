@@ -1,1 +1,1 @@
-export { HouseFeed } from './HouseFeed'
+export { HouseFeed } from './house-feed';

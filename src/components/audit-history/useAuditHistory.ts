@@ -12,7 +12,7 @@ type AuditHistoryState = {
   resetAll: () => void;
 };
 
-const useAuditHistoryStore = create<AuditHistoryState>((set, get) => ({
+export const useAuditHistoryStore = create<AuditHistoryState>((set, get) => ({
   history: [],
   getAuditState: (id) => getAuditStateFromRecords(get().history, id),
   decide: (house, status) => {
