@@ -23,10 +23,10 @@ export const Header = () => {
           type="button"
           variant="outline"
           size="sm"
-          className="w-full shrink-0 sm:w-auto"
+          className="w-full shrink-0 cursor-pointer border-zinc-900 bg-zinc-900 text-white hover:border-zinc-800 hover:bg-zinc-800 hover:text-white focus-visible:ring-zinc-400 sm:w-auto"
           onClick={() => setAuditDialogOpen(true)}
         >
-          Review & export decisions
+          Manage & Export Decisions
         </Button>
       </div>
       <AuditDialog open={auditDialogOpen} onOpenChange={setAuditDialogOpen}/>
