@@ -1,5 +1,5 @@
 export function getApiOrigin(): string {
-  const api = process.env.VITE_API_BASE;
+  const api = process.env.VITE_API_BASE_STAGING;
 
   if (typeof api === 'string' && api.trim() !== '') {
     return api.trim().replace(/\/$/, '');
