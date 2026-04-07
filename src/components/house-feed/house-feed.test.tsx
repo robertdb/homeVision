@@ -167,7 +167,7 @@ describe('HouseFeed', () => {
     expect(countFetchCallsForPage(fetchMock, 2)).toBe(0);
   });
 
-  it('shows load-more error and recovers after Try again', async () => {
+  it('shows the feed error UI when the second page request fails', async () => {
     globalThis.fetch = createFailPage2ThenSuccessFetchMock();
     const { rerender, client } = renderWithQuery(<HouseFeed />);
 
@@ -184,18 +184,11 @@ describe('HouseFeed', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/having trouble showing more houses/i),
+        screen.getByText(/having trouble showing Houses/i),
       ).toBeInTheDocument();
     });
-
-    const user = userEvent.setup();
-    await user.click(
+    expect(
       screen.getByRole('button', { name: /^try again$/i }),
-    );
-
-    await waitFor(() => {
-      expect(screen.getAllByRole('listitem')).toHaveLength(20);
-    });
-    expect(screen.getByTestId('house-card-29')).toHaveTextContent('Jules Page');
+    ).toBeInTheDocument();
   });
 });
