@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { House } from '@/features/house'
 import { HouseCard } from './HouseCard'
 
@@ -26,7 +26,21 @@ describe('HouseCard', () => {
     })
     expect(screen.getByText(expectedPrice)).toBeInTheDocument()
 
-    const img = container.querySelector('img')
-    expect(img).toHaveAttribute('src', sampleHouse.photoURL)
-  })
-})
+    const img = container.querySelector('img');
+    expect(img).toHaveAttribute('src', sampleHouse.photoURL);
+  });
+
+  it('shows photo unavailable placeholder when the image fails to load', () => {
+    const { container } = render(<HouseCard house={sampleHouse} />);
+
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    fireEvent.error(img!);
+
+    expect(screen.getByText('No photo')).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Photo unavailable' }),
+    ).toBeInTheDocument();
+    expect(container.querySelector('img')).not.toBeInTheDocument();
+  });
+});
