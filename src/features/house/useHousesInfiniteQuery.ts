@@ -8,6 +8,20 @@ import type { House, HousesPage } from './types';
 
 const HOUSES_QUERY_KEY = ['houses', HOUSES_PER_PAGE] as const;
 
+const isTestEnv = process.env.NODE_ENV === 'test';
+
+const HOUSES_QUERY_RESILIENCE_OPTIONS = {
+  retry: isTestEnv ? false : 5,
+  retryDelay: isTestEnv
+    ? () => 0
+    : (failureCount: number) => {
+        const seconds = Math.min(failureCount + 1, 5);
+        return seconds * 1000;
+      },
+  refetchOnWindowFocus: false,
+  staleTime: 60000, // 1 min
+};
+
 function getNextPageParam(
   lastPage: HousesPage,
   _pages: HousesPage[],
@@ -26,6 +40,10 @@ export interface UseHousesInfiniteQueryResult {
   isLoadingMore: boolean;
   hasMore: boolean;
   fetchNextPage: () => Promise<unknown>;
+  isFetching: boolean;
+  loadMoreFailed: boolean;
+  retryLoadMore: () => void;
+  refetch: () => void;
 }
 
 export function useHousesInfiniteQuery(): UseHousesInfiniteQueryResult {
@@ -41,6 +59,7 @@ export function useHousesInfiniteQuery(): UseHousesInfiniteQueryResult {
     queryFn: ({ pageParam, signal }) =>
       fetchHousesPage(pageParam, HOUSES_PER_PAGE, signal),
     getNextPageParam,
+    ...HOUSES_QUERY_RESILIENCE_OPTIONS,
   });
 
   const {
@@ -51,6 +70,9 @@ export function useHousesInfiniteQuery(): UseHousesInfiniteQueryResult {
     isError,
     isFetchingNextPage,
     isPending,
+    refetch,
+    isFetching,
+    isFetchNextPageError
   } = query;
 
   const houses = useMemo(
@@ -60,6 +82,10 @@ export function useHousesInfiniteQuery(): UseHousesInfiniteQueryResult {
 
   const hasMore = Boolean(hasNextPage);
 
+  const retryLoadMore = () => {
+    void fetchNextPage();
+  };
+
   return {
     houses,
     isPending,
@@ -68,5 +94,9 @@ export function useHousesInfiniteQuery(): UseHousesInfiniteQueryResult {
     isLoadingMore: isFetchingNextPage,
     hasMore,
     fetchNextPage,
+    refetch,
+    isFetching,
+    loadMoreFailed: isFetchNextPageError,
+    retryLoadMore
   };
 }

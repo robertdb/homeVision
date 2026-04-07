@@ -73,23 +73,57 @@ export const SAMPLE_HOUSES_PAGE: House[] = [
   },
 ];
 
+function pageFromHousesFetchInput(input: RequestInfo | URL): string | null {
+  const url =
+    typeof input === 'string'
+      ? input
+      : input instanceof Request
+        ? input.url
+        : input.toString();
+  return new URL(url, 'http://localhost').searchParams.get('page');
+}
+
+function successResponseForPage(page: string | null) {
+  const body =
+    page === '1'
+      ? { houses: SAMPLE_HOUSES_PAGE, ok: true }
+      : { houses: [], ok: true };
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve(body),
+  });
+}
+
 export function createHousesFetchMock() {
   return jest.fn((input: RequestInfo | URL) => {
-    const url =
-      typeof input === 'string'
-        ? input
-        : input instanceof Request
-          ? input.url
-          : input.toString();
-    const page = new URL(url, 'http://localhost').searchParams.get('page');
-    const body =
-      page === '1'
-        ? { houses: SAMPLE_HOUSES_PAGE, ok: true }
-        : { houses: [], ok: true };
-    return Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(body),
-    });
+    const page = pageFromHousesFetchInput(input);
+    return successResponseForPage(page);
+  }) as unknown as typeof fetch;
+}
+
+export function createFailingHousesFetchMock(status = 500) {
+  return jest.fn(() =>
+    Promise.resolve({
+      ok: false,
+      status,
+      json: async () => ({}),
+    }),
+  ) as unknown as typeof fetch;
+}
+
+export function createFailFirstPageThenSuccessFetchMock() {
+  let firstPage1Attempt = true;
+  return jest.fn((input: RequestInfo | URL) => {
+    const page = pageFromHousesFetchInput(input);
+    if (page === '1' && firstPage1Attempt) {
+      firstPage1Attempt = false;
+      return Promise.resolve({
+        ok: false,
+        status: 500,
+        json: async () => ({}),
+      });
+    }
+    return successResponseForPage(page);
   }) as unknown as typeof fetch;
 }
