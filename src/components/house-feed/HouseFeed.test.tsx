@@ -10,7 +10,7 @@ import {
   createHousesFetchMock,
 } from '@/test-utils/housesApiMock';
 
-jest.mock('../HouseCard', () => ({
+jest.mock('../house-card', () => ({
   HouseCard: ({ house }: { house: { id: number; homeowner: string } }) => (
     <div data-testid={`house-card-${house.id}`}>{house.homeowner}</div>
   ),
