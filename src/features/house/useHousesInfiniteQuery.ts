@@ -56,8 +56,8 @@ export function useHousesInfiniteQuery(): UseHousesInfiniteQueryResult {
   >({
     queryKey: HOUSES_QUERY_KEY,
     initialPageParam: 1,
-    queryFn: ({ pageParam, signal }) =>
-      fetchHousesPage(pageParam, HOUSES_PER_PAGE, signal),
+    queryFn: ({ pageParam }) =>
+      fetchHousesPage(pageParam, HOUSES_PER_PAGE),
     getNextPageParam,
     ...HOUSES_QUERY_RESILIENCE_OPTIONS,
   });

@@ -18,18 +18,18 @@ const priceFmt = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-interface HouseCardProps {
+export interface HouseCardProps {
   house: House;
   auditState: AuditState;
   onApprove: () => void;
   onReject: () => void;
 }
 
-export const HouseCard = ({ 
-  house, 
+export const HouseCard = ({
+  house,
   auditState,
   onApprove,
-  onReject
+  onReject,
 }: HouseCardProps) => {
   const [photoFailed, setPhotoFailed] = useState(false);
   const isPending = auditState === 'pending';
@@ -73,6 +73,7 @@ export const HouseCard = ({
                 size="sm"
                 className="shadow-md"
                 onClick={onApprove}
+                aria-label={`Approve house at ${house.address}`}
               >
                 Approve
               </Button>
@@ -82,6 +83,7 @@ export const HouseCard = ({
                 size="sm"
                 className="shadow-md"
                 onClick={onReject}
+                aria-label={`Reject house at ${house.address}`}
               >
                 Reject
               </Button>

@@ -56,6 +56,7 @@ export function AuditHistoryTable({ data, removeById }: AuditHistoryTableProps) 
                 size="sm"
                 className="w-full sm:w-auto"
                 onClick={() => removeById(row.id)}
+                aria-label={`Undo decision for house ${row.id}`}
               >
                 Undo
               </Button>

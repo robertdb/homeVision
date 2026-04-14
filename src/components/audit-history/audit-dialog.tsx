@@ -68,6 +68,7 @@ export function AuditDialog({ open, onOpenChange }: AuditDialogProps) {
               variant="outline"
               disabled={total === 0}
               onClick={() => setPendingConfirm('export')}
+              aria-label="Export audit history as CSV"
             >
               Export CSV
             </Button>
@@ -76,6 +77,7 @@ export function AuditDialog({ open, onOpenChange }: AuditDialogProps) {
               variant="destructive"
               disabled={total === 0}
               onClick={() => setPendingConfirm('reset')}
+              aria-label="Reset all audit history entries"
             >
               Reset all
             </Button>
