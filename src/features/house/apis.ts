@@ -12,10 +12,9 @@ export function housesPageUrl(page: number, perPage: number): string {
 export async function fetchHousesPage(
   page: number,
   perPage: number,
-  signal?: AbortSignal,
 ): Promise<HousesPage> {
   const url = housesPageUrl(page, perPage);
-  const res = await fetch(url, { signal });
+  const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Request failed (${res.status})`);
   }

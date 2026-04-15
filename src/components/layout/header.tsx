@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { AuditDialog } from '@/components/audit-history';
 
 const HEADER_DESCRIPTION =
-  'Ensure all property details make sense together. Cross-reference the image with the price, owner, and address to approve or reject the entry. Your actions will be logged per ID for export.';
+  'Ensure all property details make sense together. Cross-reference the image with the price, owner, and address to approve or reject the entry. Each decision is logged by property ID and can be exported.';
 
 export const Header = () => {
   const [auditDialogOpen, setAuditDialogOpen] = useState(false);
@@ -25,6 +25,7 @@ export const Header = () => {
           size="sm"
           className="w-full shrink-0 cursor-pointer border-zinc-900 bg-zinc-900 text-white hover:border-zinc-800 hover:bg-zinc-800 hover:text-white focus-visible:ring-zinc-400 sm:w-auto"
           onClick={() => setAuditDialogOpen(true)}
+          aria-label="Open audit history dialog"
         >
           Manage & Export Decisions
         </Button>

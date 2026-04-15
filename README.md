@@ -10,31 +10,26 @@ The houses API base URL is supplied at build time via `VITE_API_BASE_STAGING`. F
 
 ## Requirements
 
-* **Node.js.** Use a version compatible with this repo's Vite toolchain (see Vite's [environment docs](https://vite.dev/guide/env-and-mode.html) and your local `npm` warnings if any).
+- **Node.js.** Use a version compatible with this repo's Vite toolchain (see Vite's [environment docs](https://vite.dev/guide/env-and-mode.html) and your local `npm` warnings if any).
 
 ## Run locally
 
 1. **Install dependencies**
-
-   ```bash
+  ```bash
    npm install
-   ```
-
+  ```
 2. **Environment variables**
-
-   Copy [`.env.example`](.env.example) to `.env` and set the API origin:
-
-   * `VITE_API_BASE_STAGING`: base URL of the houses API (no trailing slash required; the app normalizes it). Example: `https://api.example.com`
-
+  Copy `[.env.example](.env.example)` to `.env` and set the API origin:
+  - `**VITE_API_BASE_STAGING`:** base URL of the houses API (scheme + host, **no** trailing slash; the app strips one if present). Example: `https://api.example.com`. Vite only exposes variables prefixed with `VITE_` to the browser bundle.
+  - **Optional empty value:** If you omit this variable or leave it blank, `[getApiOrigin()](src/features/api.ts)` returns `""` in non-production builds so requests use **same-origin relative** paths such as `/api_project/houses?...` (useful with a dev proxy or when the API is served from the same host).
 3. **Start the dev server**
-
-   ```bash
+  ```bash
    npm run dev
-   ```
-
+  ```
    Open the URL Vite prints (usually `http://localhost:5173`).
 
 ### Other scripts
+
 
 | Command           | Description                        |
 | ----------------- | ---------------------------------- |
@@ -42,6 +37,17 @@ The houses API base URL is supplied at build time via `VITE_API_BASE_STAGING`. F
 | `npm run preview` | Serve the production build locally |
 | `npm run lint`    | ESLint                             |
 | `npm test`        | Jest                               |
+
+
+## Testing strategy
+
+Tests use **Jest** with **ts-jest** and `**@testing-library/react`** where the UI matters.
+
+- **API / data layer:** `[src/features/house/apis.test.ts](src/features/house/apis.test.ts)` exercises `[fetchHousesPage](src/features/house/apis.ts)` for a valid page, non-OK HTTP (`FetchHousesPageError`), **rejected `fetch`** (`FetchHousesNetworkError` — offline, DNS, CORS, etc.), malformed JSON payloads (`HousesPageValidationError`), and bad `Content-Type` when headers are present.
+- **Audit domain:** `[useAuditHistory.test.ts](src/components/audit-history/useAuditHistory.test.ts)` and `[auditHelpers.test.ts](src/components/audit-history/auditHelpers.test.ts)` cover store behavior and CSV helpers.
+- **Components:** `[house-feed.test.tsx](src/components/house-feed/house-feed.test.tsx)` covers loading, first-page failure + retry, pagination / sentinel, and second-page failure UI; `[house-card.test.tsx](src/components/house-card/house-card.test.tsx)` covers the card; `[App.test.tsx](src/App.test.tsx)` smoke-tests the shell.
+
+Run `npm test` before pushing; CI should do the same.
 
 ## Implementation timeline (pull requests)
 
@@ -61,30 +67,20 @@ This project was built incrementally via pull requests. **Each PR includes a des
 
 ## Deploy (Vercel)
 
-The staging URL at the top of this README is deployed with the same flow. The Vercel project already defines `VITE_API_BASE_STAGING` for that environment (do not commit real API URLs or secrets in this repo).
-
-This app is a **static Vite build**. Deploy it on [Vercel](https://vercel.com) by importing the Git repository.
-
-1. **Import the project** in the Vercel dashboard and connect your Git provider (GitHub, GitLab, or Bitbucket).
-
-2. **Build settings** (defaults are usually correct):
-
-   * **Framework preset:** Vite
-   * **Build command:** `npm run build`
-   * **Output directory:** `dist`
-   * **Install command:** `npm install` (or your package manager equivalent)
-
-3. **Environment variables** (Project → Settings → Environment Variables):
-
-   * Add `VITE_API_BASE_STAGING` with the API base URL for each environment you use (**Production**, **Preview**, etc.). Vite only exposes variables prefixed with `VITE_` to the client bundle.
-
-4. **Deploy.** For the Rhythmic setup, `main` is the **Production** branch. Pushes to `main` trigger production deployments.
+1. Import this repository in [Vercel](https://vercel.com) (Framework: **Vite**).
+2. Keep default build settings (`npm install`, `npm run build`, output `dist`).
+3. Set `VITE_API_BASE_STAGING` for each environment and deploy (`main` is Production in this setup).
 
 ## API configuration
 
-House requests are built from `VITE_API_BASE_STAGING` in [`src/features/api.ts`](src/features/api.ts) and the house API helpers under [`src/features/house/`](src/features/house/).
+House requests are built from `VITE_API_BASE_STAGING` in `[src/features/api.ts](src/features/api.ts)` and the house API helpers under `[src/features/house/](src/features/house/)`.
 
 ## House grid and performance
 
 I considered a virtualized list for the house grid at one point. Performance checks stayed consistently strong (for example Lighthouse on the staging URL: mobile performance **99**, FCP and LCP about **0.4s**, TBT **40ms**, CLS **0** in Chrome DevTools), so I did not prioritize building virtualization.
+
+## Design rationale
+
+- **No virtualization yet:** measured feed performance stayed strong on staging, so complexity was deferred.
+- **Pagination UX:** auto-load keeps scrolling smooth, while explicit **Load more** and retry controls provide predictable behavior when intersection observers are unavailable or requests fail.
 
